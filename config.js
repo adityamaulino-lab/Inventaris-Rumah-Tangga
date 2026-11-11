@@ -1,0 +1,1 @@
+window.RTA_CONFIG = { API_URL: "https://script.google.com/macros/s/AKfycbygyy1oSP8aPd7ynCIYZxclDWG9IWasWa_VAgKJZxB1xTIEAvS60jVPaBnzz2U1wW0f/exec", APP_NAME: "Rumah Tangga Aset" };

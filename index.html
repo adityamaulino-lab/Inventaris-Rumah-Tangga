@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Katalog Barang | Rumah Tangga Aset</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/public.css" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="logo" href="index.html"
+        ><span>RT</span><b>Rumah Tangga Aset</b></a
+      ><a class="admin" href="admin.html">Portal Petugas <span>→</span></a>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">
+          <span class="live-dot"></span> PORTAL LAYANAN • GUBERNURAN
+        </div>
+        <h1>Inventaris Rumah Tangga,<br /><em>lebih mudah diakses.</em></h1>
+        <p>
+          Jelajahi katalog barang milik Rumah Tangga dan ajukan peminjaman
+          secara online. Setiap permohonan akan diperiksa dan disetujui petugas
+          sebelum serah terima.
+        </p>
+        <div class="hero-tags">
+          <span>✓ Tanpa akun</span><span>✓ Persetujuan petugas</span
+          ><span>✓ Status stok</span>
+        </div>
+      </section>
+      <section class="catalog panel-shell">
+        <div class="catalog-top">
+          <div>
+            <div class="eyebrow">INVENTARIS</div>
+            <h2>Katalog barang</h2>
+          </div>
+          <div class="tools">
+            <input
+              id="search"
+              type="search"
+              placeholder="Cari nama barang…"
+              aria-label="Cari barang"
+            /><select id="category" aria-label="Filter kategori">
+              <option value="">Semua kategori</option>
+            </select>
+          </div>
+        </div>
+        <div id="status" role="status">Memuat katalog…</div>
+        <div id="grid" class="grid"></div>
+      </section>
+      <section class="catalog panel-shell tracker-shell">
+        <div class="catalog-top">
+          <div>
+            <div class="eyebrow">CEK STATUS</div>
+            <h2>Lacak pengajuan Anda</h2>
+            <p class="muted">
+              Gunakan nomor resi dan nomor WhatsApp yang sama dengan saat mengajukan (format 08… atau +62… sama-sama bisa).
+            </p>
+          </div>
+        </div>
+        <form id="trackForm" class="track-form">
+          <label
+            >Nomor resi<input
+              name="loan_id"
+              required
+              placeholder="PJM-XXXXXXXX" /></label
+          ><label
+            >Nomor WhatsApp<input
+              name="contact"
+              type="tel"
+              required
+              placeholder="08xxxxxxxxxx" /></label
+          ><button type="submit">Lacak pengajuan</button>
+        </form>
+        <div id="trackResult" role="status"></div>
+      </section>
+    </main>
+    <div id="dialog" class="overlay" hidden>
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="formTitle"
+      >
+        <button class="close" id="close" aria-label="Tutup">×</button>
+        <div class="eyebrow">FORMULIR PEMINJAMAN</div>
+        <h2 id="formTitle">Ajukan barang</h2>
+        <p id="selected" class="muted"></p>
+        <form id="request">
+          <input type="hidden" name="asset_id" id="asset_id" />
+          <div class="trap">
+            <label
+              >Website<input name="website" autocomplete="off" tabindex="-1"
+            /></label>
+          </div>
+          <label
+            >Nama lengkap<input name="name" maxlength="100" required /></label
+          ><label
+            >Bagian / instansi<input
+              name="department"
+              maxlength="120"
+              required /></label
+          ><label
+            >Nomor HP / WhatsApp<input
+             name="contact"
+                type="tel"
+                maxlength="22"
+                placeholder="08xxxxxxxxxx"
+                required/></label
+          ><label id="qtyLabel"
+            >Jumlah<input
+              name="quantity"
+              type="number"
+              min="1"
+              max="1000"
+              value="1"
+              required /></label
+          ><input type="hidden" name="kind" id="kind" value="asset" /><label
+            >Keperluan<textarea
+              name="purpose"
+              maxlength="500"
+              rows="3"
+              required
+            ></textarea>
+          </label>
+          <div class="dates">
+            <label
+              >Tanggal penggunaan<input
+                name="usage_date"
+                type="date"
+                required /></label
+            ><label
+              >Tanggal pengembalian<input name="due_date" type="date" required
+            /></label>
+          </div>
+          <p class="muted small">
+            Identitas dan kontak digunakan untuk memproses pengajuan.
+            Persetujuan bukan jaminan stok sampai serah terima.
+          </p>
+          <button id="send" type="submit">Kirim permohonan</button>
+          <div id="formMessage" role="status"></div>
+        </form>
+      </div>
+    </div>
+    <footer>
+      Rumah Tangga Aset · Layanan inventaris, kendaraan, dan peminjaman
+    </footer>
+    <script src="config.js"></script>
+    <script src="assets/public.js"></script>
+  </body>
+</html>
