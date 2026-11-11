@@ -220,3 +220,4 @@ td.num{font-variant-numeric:tabular-nums}
 .thumb{width:64px;height:48px;object-fit:cover;border-radius:6px;background:#f0f5f5;display:block}
 .thumb-empty{width:64px;height:48px;border-radius:6px;background:#f0f5f5;color:#8a9aa4;display:grid;place-items:center;font-size:11px}
 .photo-preview{display:block;max-width:100%;max-height:150px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid var(--line)}
+.note-cell{white-space:normal;min-width:180px;max-width:280px;color:#33485a}

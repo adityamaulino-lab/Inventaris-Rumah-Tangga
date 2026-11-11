@@ -5,6 +5,9 @@
 - Tabel Kendaraan: kolom Foto dan tombol Edit. Status kendaraan (Aktif/Perawatan/Nonaktif) kini bisa diubah dari UI.
 - Form Aset memakai pengecil foto yang sama (batas 3 MB dihapus).
 
+- Kolom Catatan kini tampil di tabel Inventaris (portal petugas).
+- Field baru **Spesifikasi lengkap** pada form aset (kolom baru `Assets.specs`). Di beranda, klik kartu barang untuk membuka popup detail berisi spesifikasi; format penulisan satu baris satu spesifikasi `Nama: isi`. Field Catatan menjadi catatan internal dan tidak tampil ke publik.
+
 ## Perbaikan bug
 - code2.gs: regex nomor telepon salah tulis (`\\D`), sehingga +62 / tanda hubung tidak dibersihkan.
 - code2.gs: pelacakan resi sekarang menyamakan format nomor (08… / 8… / +62…).
@@ -18,4 +21,4 @@
 ## Pemasangan
 1. Unggah semua file website ke GitHub Pages.
 2. Ganti isi Code.gs di Apps Script dengan code2.gs, lalu Deploy > New version.
-3. Tidak perlu menjalankan setupDatabase() lagi.
+3. Kolom `specs` ditambahkan otomatis saat aset pertama kali disimpan; boleh juga menjalankan setupDatabase() sekali (aman, data lama tidak dihapus).

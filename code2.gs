@@ -8,7 +8,7 @@ const SESSION_TTL = 21600;
 const SHEETS = {
  Users:['user_id','name','username','password_hash','salt','role','department','active'],
  Departments:['department_id','department_name','leader_name','active'],
- Assets:['asset_id','asset_name','category','location','holder','condition','status','quantity','acquisition_date','notes','image_url'],
+ Assets:['asset_id','asset_name','category','location','holder','condition','status','quantity','acquisition_date','notes','image_url','specs'],
  Loans:['loan_id','requester_id','requester_name','department','purpose','request_date','usage_date','due_date','status','approved_by','approved_at','handover_at','returned_at','return_condition','notes','handover_signature','handover_signed_at','requester_contact'],
  LoanItems:['loan_item_id','loan_id','asset_id','asset_name','quantity'],
  Vehicles:['vehicle_id','name','plate_number','vehicle_type','year','responsible_person','gps_provider','gps_device_id','gps_status','stnk_expiry','tax_due','service_due','status','image_url'],
@@ -95,8 +95,10 @@ function admin_(u){if(u.role!=='admin')throw Error('Akses ditolak.');}
 function publicUser_(u){return {user_id:u.user_id,name:u.name,username:u.username,role:u.role,department:u.department,active:u.active};}
 function dashboard_(){const a=rows_('Assets'),l=rows_('Loans');return {success:true,summary:{totalAssets:a.reduce((n,x)=>n+(Number(x.quantity)||0),0),availableAssets:a.filter(x=>x.status==='Tersedia').reduce((n,x)=>n+(Number(x.quantity)||0),0),pendingLoans:l.filter(x=>x.status==='Menunggu Persetujuan').length,activeLoans:l.filter(x=>x.status==='Dipinjam').length,overdueLoans:l.filter(x=>x.status==='Dipinjam'&&x.due_date&&new Date(x.due_date)<new Date()).length}};}
 function listLoans_(u){let l=rows_('Loans');if(!['admin','staff'].includes(u.role))l=l.filter(x=>String(x.requester_id)===String(u.user_id));const it=rows_('LoanItems');l.forEach(x=>x.items=it.filter(y=>String(y.loan_id)===String(x.loan_id)));return {success:true,data:l};}
+function ensureColumns_(n){const sh=sheet_(n),h=sh.getRange(1,1,1,Math.max(1,sh.getLastColumn())).getValues()[0].map(String),miss=SHEETS[n].filter(x=>!h.includes(x));if(miss.length)sh.getRange(1,sh.getLastColumn()+1,1,miss.length).setValues([miss]);}
 function saveAsset_(u,p){
- const id=String(p.asset_id||id_('AST'));const existing=rows_('Assets').find(x=>String(x.asset_id)===id)||{};const d={asset_id:id,asset_name:req_(p.asset_name,'Nama barang'),category:String(p.category||'Umum'),location:String(p.location||''),holder:String(p.holder||'Rumah Tangga'),condition:String(p.condition||'Baik'),status:String(p.status||'Tersedia'),quantity:Math.max(0,Number(p.quantity)||0),acquisition_date:String(p.acquisition_date||existing.acquisition_date||''),notes:String(p.notes||''),image_url:String(p.image_url||existing.image_url||'')};
+ ensureColumns_('Assets');
+ const id=String(p.asset_id||id_('AST'));const existing=rows_('Assets').find(x=>String(x.asset_id)===id)||{};const d={asset_id:id,asset_name:req_(p.asset_name,'Nama barang'),category:String(p.category||'Umum'),location:String(p.location||''),holder:String(p.holder||'Rumah Tangga'),condition:String(p.condition||'Baik'),status:String(p.status||'Tersedia'),quantity:Math.max(0,Number(p.quantity)||0),acquisition_date:String(p.acquisition_date||existing.acquisition_date||''),notes:String(p.notes||''),image_url:String(p.image_url||existing.image_url||''),specs:(p.specs===undefined?String(existing.specs||''):String(p.specs).slice(0,3000))};
  upsert_('Assets','asset_id',d);log_(u,'SIMPAN ASET','Asset',id);return {success:true,data:d};
 }
 function requestLoan_(u,p){
@@ -205,7 +207,7 @@ function resetAdminPassword(){
 }
 
 function publicCatalog_(){
- const a=rows_('Assets').filter(x=>String(x.status||'').toLowerCase()!=='dihapus').map(x=>({kind:'asset',asset_id:String(x.asset_id||''),asset_name:String(x.asset_name||''),category:String(x.category||'Umum'),condition:String(x.condition||''),quantity:Math.max(0,Number(x.quantity)||0),image_url:String(x.image_url||''),available:String(x.status||'').toLowerCase()==='tersedia'&&Number(x.quantity)>0}));
+ const a=rows_('Assets').filter(x=>String(x.status||'').toLowerCase()!=='dihapus').map(x=>({kind:'asset',asset_id:String(x.asset_id||''),asset_name:String(x.asset_name||''),category:String(x.category||'Umum'),condition:String(x.condition||''),quantity:Math.max(0,Number(x.quantity)||0),image_url:String(x.image_url||''),specs:String(x.specs||''),available:String(x.status||'').toLowerCase()==='tersedia'&&Number(x.quantity)>0}));
  const v=rows_('Vehicles').filter(x=>['aktif','tersedia'].includes(String(x.status||'').toLowerCase())).map(x=>({kind:'vehicle',asset_id:String(x.vehicle_id||''),asset_name:String(x.name||''),category:String(x.vehicle_type||'Kendaraan'),condition:String(x.status||'Aktif'),quantity:1,image_url:String(x.image_url||''),plate_number:String(x.plate_number||''),available:true}));
  return {success:true,data:a.concat(v)};
 }
